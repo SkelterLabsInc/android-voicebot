@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "aiq.voicebot.v1alpha1";
+
+package skelterlabs.aiq.voicebot.v1alpha1;
+
+// TODO(hojin): Define here.
+import "speech.proto";
+// TODO(hojin): Define here.
+import "tts.proto";
+
+message StreamingTalkRequest {
+  // TODO(hojin): Move to top level here.
+  message StreamingTalkConfig {
+    StreamingRecognitionConfig streaming_recognition_config = 1;
+    SynthesizeSpeechRequestConfig synthesize_speech_config = 2;
+    string talk_id = 3;
+    // The session id to resume conversation. If not specified, new session id
+    // will be generated.
+    string session_id = 5;
+    // The stringified json context which is for chatbot context when talk
+    // started.
+    // See chatbots/service/server/conversation/conversation_message_v2:UserContext
+    string starting_user_context_json = 4;
+  }
+
+  // NOTE(hyunseok): Disable oneof temporarily
+  //oneof streaming_talk_request {
+  StreamingTalkConfig streaming_talk_config = 1;
+  bytes audio_content = 2;
+  //}
+}
+
+message StreamingTalkResponse {
+  skelterlabs.aiq.voicebot.v1alpha1.StreamingSynthesizeSpeechResponse
+      streaming_synthesize_speech_response = 1;
+
+  // TODO(hojin): Fill this up.
+  enum TalkEvent {
+    NOTHING = 0;
+    LISTENING = 1; // Currently, not available.
+    PROCESSING_STARTED = 2;
+    SPEAKING_STARTED = 3;
+    SPEAKING_FINISHED = 4;
+  }
+
+  TalkEvent talk_event = 2;
+  string user_say = 3;
+  string agent_answer = 4;
+  // The session id of this talk. It is provided with SPEAKING_STARTED and
+  // SPEAKING_FINISHED events.
+  string session_id = 5;
+}
+
+service Voicebot {
+  // streaming_talk_config of StreamingTalkRequest should be set on first
+  // request.
+  rpc StreamingTalk (stream StreamingTalkRequest)
+      returns (stream StreamingTalkResponse) {
+  }
+}

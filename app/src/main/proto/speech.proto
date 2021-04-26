@@ -1,0 +1,49 @@
+// This proto is based on google cloud speech proto.
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "aiq.voicebot.v1alpha1";
+
+package skelterlabs.aiq.voicebot.v1alpha1;
+
+message RecognitionConfig {
+  enum AudioEncoding {
+    // Not specified.
+    ENCODING_UNSPECIFIED = 0;
+
+    // Uncompressed 16-bit signed little-endian samples (Linear PCM).
+    LINEAR16 = 1;
+
+    // Not supported.
+    FLAC = 2;
+
+    // Not supported.
+    MULAW = 3;
+
+    // Not supported.
+    AMR = 4;
+
+    // Not supported.
+    AMR_WB = 5;
+
+    // Not supported.
+    OGG_OPUS = 6;
+
+    // Not supported.
+    SPEEX_WITH_HEADER_BYTE = 7;
+  }
+
+  AudioEncoding encoding = 1;
+
+  int32 sample_rate_hertz = 2;
+}
+
+message StreamingRecognitionConfig {
+  RecognitionConfig config = 1;
+}
+
+message StreamingRecognizeRequest {
+  oneof streaming_request {
+    StreamingRecognitionConfig streaming_config = 1;
+    bytes audio_content = 2;
+  }
+}

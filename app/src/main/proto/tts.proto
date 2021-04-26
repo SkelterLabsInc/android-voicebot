@@ -1,0 +1,17 @@
+// This proto is based on google cloud tts proto.
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "aiq.voicebot.v1alpha1";
+
+package skelterlabs.aiq.voicebot.v1alpha1;
+
+message SynthesizeSpeechRequestConfig {}
+
+message StreamingSynthesizeSpeechResponse {
+  // The audio data bytes encoded as specified in the request, including the
+  // header for encodings that are wrapped in containers (e.g. MP3, OGG_OPUS).
+  // For LINEAR16 audio, we include the WAV header. Note: as
+  // with all bytes fields, protobuffers use a pure binary representation,
+  // whereas JSON representations use base64.
+  bytes audio_content = 1;
+}
